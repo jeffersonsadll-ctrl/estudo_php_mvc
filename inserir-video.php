@@ -1,16 +1,16 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ./pages/enviar-video.html');
-    exit;
+  header('Location: ./pages/enviar-video.html');
+  exit;
 }
 
 $url = filter_input(INPUT_POST, 'url', FILTER_SANITIZE_URL);
 $titulo = filter_input(INPUT_POST, 'titulo', FILTER_SANITIZE_SPECIAL_CHARS);
 
 if (!$url || !$titulo) {
-    echo 'Preencha todos os campos obrigatorios.';
-    exit;
+  echo 'Preencha todos os campos obrigatorios.';
+  exit;
 }
 
 $dbPath = __DIR__ . '/banco_dados.sqlite';
@@ -23,5 +23,5 @@ $stmt->bindValue(':url', $url);
 $stmt->bindValue(':titulo', $titulo);
 $stmt->execute();
 
-header('Location: ./index.html');
+header('Location: ./index.php');
 exit;
