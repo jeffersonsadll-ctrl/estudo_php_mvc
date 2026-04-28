@@ -4,7 +4,7 @@ $dbPath = __DIR__ . '/banco_dados.sqlite';
 $pdo = new PDO("sqlite:$dbPath");
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$sql = 'SELECT * FROM videos';
+$sql = 'SELECT id, url, titulo FROM videos';
 $stmt = $pdo->query($sql);
 $videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -51,8 +51,14 @@ $videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <img src="./img/logo.png" alt="logo canal">
                 <h3><?= $video['titulo'] ?></h3>
                 <div class="acoes-video">
-                    <a href="./pages/enviar-video.html">Editar</a>
-                    <a href="./pages/enviar-video.html">Excluir</a>
+                    <form method="post" action="./formulario-video.php" style="display: inline;">
+                      <input type="hidden" name="id" value="<?= $video['id'] ?>">
+                      <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; text-decoration: underline;">Editar</button>
+                    </form>
+                    <form method="post" action="./remover-video.php" style="display: inline;">
+                      <input type="hidden" name="id" value="<?= $video['id'] ?>">
+                      <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; text-decoration: underline;">Excluir</button>
+                    </form>
                 </div>
             </div>
         </li>
