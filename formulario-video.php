@@ -4,18 +4,25 @@ $dbPath = __DIR__ . '/banco_dados.sqlite';
 $pdo = new PDO("sqlite:$dbPath");
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-if (!$id) {
-  echo 'ID do vídeo é inválido.';
-  exit;
+if( array_key_exists('id', $_POST) )
+{
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    if (!$id) {
+      echo 'ID do vídeo é inválido.';
+      exit;
+    }
+    
+    $sql = 'SELECT id, url, titulo FROM videos WHERE id = :id';
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+    $stmt->execute();
+    
+    $video = $stmt->fetch(PDO::FETCH_ASSOC);
 }
-
-$sql = 'SELECT id, url, titulo FROM videos WHERE id = :id';
-$stmt = $pdo->prepare($sql);
-$stmt->bindValue(":id", $id, PDO::PARAM_INT);
-$stmt->execute();
-
-$video = $stmt->fetch(PDO::FETCH_ASSOC);
+else {
+    $id = false;
+    $video = ['url' => '', 'titulo' => ''];
+}
 ?>
 
 <!DOCTYPE html>
@@ -52,7 +59,7 @@ $video = $stmt->fetch(PDO::FETCH_ASSOC);
 
     <main class="container">
 
-        <form class="container__formulario" action="<?= $id === false? "./inserir-video.php" : "./editar-video.php" ?>" method="post">
+        <form class="container__formulario" action="/salvar-video" method="post">
             <h2 class="formulario__titulo">Edite o video</h3>
                 <div class="formulario__campo">
                     <label class="campo__etiqueta" for="url">Link embed</label>
