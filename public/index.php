@@ -12,4 +12,4 @@ match ($_SERVER['PATH_INFO'] ?? '/') {
   default => $fileRequire = "/404.php"
 };
 
-require "{$dirPath}{$fileRequire}";
+require "{$dirPath}/../{$fileRequire}";
