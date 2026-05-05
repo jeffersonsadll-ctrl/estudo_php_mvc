@@ -1,5 +1,8 @@
 <?php
 
+use App\AutoPlay\Repository\VideoRepository;
+use App\AutoPlay\Entity\Video;
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   header('Location: ./pages/enviar-video.html');
   exit;
@@ -15,13 +18,9 @@ if (!$url || !$titulo) {
 
 $dbPath = __DIR__ . '/banco_dados.sqlite';
 $pdo = new PDO("sqlite:$dbPath");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$videoRepository = new VideoRepository($pdo);
 
-$sql = 'INSERT INTO videos (url, titulo) VALUES (:url, :titulo)';
-$stmt = $pdo->prepare($sql);
-$stmt->bindValue(':url', $url);
-$stmt->bindValue(':titulo', $titulo);
-$stmt->execute();
+$videoRepository->add(new Video($url, $titulo));
 
 header('Location: ./index.php');
 exit;

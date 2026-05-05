@@ -1,8 +1,11 @@
 <?php 
 
+use App\AutoPlay\Repository\VideoRepository;
+
 $dbPath = __DIR__ . '/banco_dados.sqlite';
 $pdo = new PDO("sqlite:$dbPath");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$videoRepository = new VideoRepository($pdo);
 
 if( array_key_exists('id', $_POST) )
 {
@@ -12,16 +15,14 @@ if( array_key_exists('id', $_POST) )
       exit;
     }
     
-    $sql = 'SELECT id, url, titulo FROM videos WHERE id = :id';
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(":id", $id, PDO::PARAM_INT);
-    $stmt->execute();
-    
-    $video = $stmt->fetch(PDO::FETCH_ASSOC);
+    $video = $videoRepository->findById($id);
 }
 else {
     $id = false;
-    $video = ['url' => '', 'titulo' => ''];
+    $video = (object) [
+        'url' => '',
+        'titulo' => ''
+    ];
 }
 ?>
 
@@ -33,18 +34,18 @@ else {
             <h2 class="formulario__titulo">Edite o video</h3>
                 <div class="formulario__campo">
                     <label class="campo__etiqueta" for="url">Link embed</label>
-                    <input name="url" class="campo__escrita" required id='url' value="<?= $video['url'] ?>" />
+                    <input name="url" class="campo__escrita" required id='url' value="<?= $video ? $video->url : '' ?>" />
                 </div>
 
 
                 <div class="formulario__campo">
                     <label class="campo__etiqueta" for="titulo">Titulo do vídeo</label>
-                    <input name="titulo" class="campo__escrita" required id='titulo' value="<?= $video['titulo'] ?>" />
+                    <input name="titulo" class="campo__escrita" required id='titulo' value="<?= $video ? $video->titulo : '' ?>" />
                 </div>
 
                 <?php if ($id !== false): ?>
-                  <?= $video['id'] ?>
-                  <input type="hidden" name="id" value="<?= $video['id'] ?>">
+                  <?= $video ? $video->id : '' ?>
+                  <input type="hidden" name="id" value="<?= $video ? $video->id : '' ?>">
                 <?php endif; ?>
 
                 <input class="formulario__botao" type="submit" value="Enviar" />

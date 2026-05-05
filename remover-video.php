@@ -1,9 +1,5 @@
 <?php 
 
-$dbPath = __DIR__ . '/banco_dados.sqlite';
-$pdo = new PDO("sqlite:$dbPath");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   header('Location: ./index.php');
   exit;
@@ -16,10 +12,15 @@ if (!$id) {
   exit;
 }
 
-$sql = 'DELETE FROM videos WHERE id = :id';
-$stmt = $pdo->prepare($sql);
-$stmt->bindValue(':id', $id, PDO::PARAM_INT);
-$stmt->execute();
+// -------------------
+
+use App\AutoPlay\Repository\VideoRepository;
+
+$dbPath = __DIR__ . '/banco_dados.sqlite';
+$pdo = new PDO("sqlite:$dbPath");
+
+$videoRepository = new VideoRepository($pdo);
+$videoRepository->remove($id);
 
 header('Location: ./index.php');
 exit;

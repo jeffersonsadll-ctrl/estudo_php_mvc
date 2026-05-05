@@ -3,6 +3,8 @@
 $dirPath = __DIR__;
 $fileRequire = "";
 
+require "{$dirPath}/../vendor/autoload.php";
+
 match ($_SERVER['PATH_INFO'] ?? '/') {
   "/" => $fileRequire = "/listagem-videos.php",
   "/enviar-video" => $fileRequire = "/formulario-video.php",
