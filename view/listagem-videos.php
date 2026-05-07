@@ -1,16 +1,5 @@
-<?php
 
-use App\AutoPlay\Repository\VideoRepository;
-
-$dbPath = __DIR__ . '/banco_dados.sqlite';
-$pdo = new PDO("sqlite:$dbPath");
-
-$videoRepository = new VideoRepository($pdo);
-$videos = $videoRepository->all();
-
-?>
-
-<?php require 'inicio-html.php'; ?>
+<?php require __DIR__ . '/inicio-html.php'; ?>
 
     <ul class="videos__container" alt="videos">
         <?php foreach( $videos as $video ): ?>
@@ -20,7 +9,7 @@ $videos = $videoRepository->all();
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>
             <div class="descricao-video">
-                <img src="./img/logo.png" alt="logo canal">
+                <img src="<?= __DIR__ . '/img/logo.png' ?>" alt="logo canal">
                 <h3><?= $video->titulo ?></h3>
                 <div class="acoes-video">
                     <form method="post" action="/editar-video" style="display: inline;">
@@ -37,4 +26,4 @@ $videos = $videoRepository->all();
         <?php endforeach; ?>
     </ul>
 
-<?php require 'fim-html.php'; ?>
+<?php require __DIR__ . '/fim-html.php'; ?>

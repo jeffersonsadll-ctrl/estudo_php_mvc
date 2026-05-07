@@ -13,6 +13,6 @@ class VideoListController implements Controller
     public function processarRequisicao(): void
     {
         $videos = $this->videoRepository->all();
-        require __DIR__ . '/../../listagem-videos.php';
+        require __DIR__ . '/../../view/listagem-videos.php';
     }
 }

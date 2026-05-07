@@ -26,7 +26,7 @@ else {
 }
 ?>
 
-<?php require 'inicio-html.php'; ?>
+<?php require __DIR__ . '/inicio-html.php'; ?>
 
     <main class="container">
 
@@ -53,4 +53,4 @@ else {
 
     </main>
 
-<?php require 'fim-html.php'; ?>
+<?php require __DIR__ . '/fim-html.php'; ?>
