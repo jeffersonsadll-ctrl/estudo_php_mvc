@@ -1,30 +1,36 @@
 <?php
 
-use App\AutoPlay\Controller\VideoInserirController;
-use App\AutoPlay\Controller\VideoAtualizarController;
-use App\AutoPlay\Controller\VideoRemoverController;
-use App\AutoPlay\Repository\VideoRepository;
-use App\AutoPlay\Controller\VideoListController;
-
 $dirPath = __DIR__;
 $fileRequire = "";
 
 require "{$dirPath}/../vendor/autoload.php";
 
+use App\AutoPlay\Controller\{
+  VideoInserirController,
+  VideoFormController,
+  VideoListController,
+  VideoRemoverController,
+  VideoSalvarController,
+  Erro404Controller
+};
+use App\AutoPlay\Repository\VideoRepository;
+
 $pdo = new PDO("sqlite:{$dirPath}/../banco_dados.sqlite");
 $videoRepository = new VideoRepository($pdo);
 
-match ($_SERVER['PATH_INFO'] ?? '/') {
-  "/" => (new VideoListController($videoRepository))->processarRequisicao(),
-  "/enviar-video" => $fileRequire = "/formulario-video.php",
-  "/editar-video" => $fileRequire = "/formulario-video.php",
-  "/remover-video" => (new VideoRemoverController($videoRepository))->processarRequisicao(),
-  "/salvar-video" => (array_key_exists('id', $_POST))
-                      ? (new VideoAtualizarController($videoRepository))->processarRequisicao()
-                      : (new VideoInserirController($videoRepository))->processarRequisicao(),
-  default => $fileRequire = "/404.php"
-};
+$rotas = require "{$dirPath}/../config/routes.php";
 
-if( !empty($fileRequire)) {
-  require "{$dirPath}/../{$fileRequire}";
+$metodoHttp = $_SERVER['REQUEST_METHOD'];
+$caminho = $_SERVER['PATH_INFO'] ?? '/';
+$key = "{$metodoHttp}|{$caminho}";
+
+if( array_key_exists($key, $rotas) )
+{
+  $controllerClass = new $rotas[$key]($videoRepository);
 }
+else 
+{
+  $controllerClass = new Erro404Controller();
+}
+
+$controllerClass->processarRequisicao();

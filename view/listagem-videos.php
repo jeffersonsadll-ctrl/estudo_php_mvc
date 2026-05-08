@@ -9,7 +9,7 @@
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>
             <div class="descricao-video">
-                <img src="<?= __DIR__ . '/img/logo.png' ?>" alt="logo canal">
+                <img src="<?= '/img/logo.png' ?>" alt="logo canal">
                 <h3><?= $video->titulo ?></h3>
                 <div class="acoes-video">
                     <form method="post" action="/editar-video" style="display: inline;">

@@ -1,36 +1,8 @@
-<?php 
-
-use App\AutoPlay\Repository\VideoRepository;
-
-$dbPath = __DIR__ . '/banco_dados.sqlite';
-$pdo = new PDO("sqlite:$dbPath");
-
-$videoRepository = new VideoRepository($pdo);
-
-if( array_key_exists('id', $_POST) )
-{
-    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    if (!$id) {
-      echo 'ID do vídeo é inválido.';
-      exit;
-    }
-    
-    $video = $videoRepository->findById($id);
-}
-else {
-    $id = false;
-    $video = (object) [
-        'url' => '',
-        'titulo' => ''
-    ];
-}
-?>
-
 <?php require __DIR__ . '/inicio-html.php'; ?>
 
     <main class="container">
 
-        <form class="container__formulario" action="/salvar-video" method="post">
+        <form class="container__formulario" action="<?= $actionForm ?>" method="post">
             <h2 class="formulario__titulo">Edite o video</h3>
                 <div class="formulario__campo">
                     <label class="campo__etiqueta" for="url">Link embed</label>
