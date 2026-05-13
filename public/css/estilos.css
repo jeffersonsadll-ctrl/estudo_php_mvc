@@ -51,7 +51,7 @@ body {
     padding: 15px;
 }
 
-.cabecalho__sair {
+.cabecalho__sair, .cabecalho__login {
     margin: 0 20px;
     padding: 5px 10px;
     border-radius: 10%;

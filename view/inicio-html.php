@@ -23,7 +23,11 @@
 
             <div class="cabecalho__icones">
                 <a href="/enviar-video" class="cabecalho__videos"></a>
-                <a href="/login" class="cabecalho__sair">Sair</a>
+                <?php if( !array_key_exists("logged_in", $_SESSION) ): ?>
+                    <a href="/login" class="cabecalho__login">Entrar</a>
+                <?php else: ?>
+                    <a href="/logout" class="cabecalho__sair">Sair</a>
+                <?php endif; ?>
             </div>
         </nav>
 

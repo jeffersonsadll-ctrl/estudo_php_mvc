@@ -8,5 +8,6 @@ return [
     "POST|/inserir-video" => App\AutoPlay\Controller\VideoInserirController::class,
     "POST|/atualizar-video" => App\AutoPlay\Controller\VideoAtualizarController::class,
     "GET|/login" => App\AutoPlay\Controller\LoginFormController::class,
-    "POST|/login" => App\AutoPlay\Controller\LoginController::class    
+    "POST|/login" => App\AutoPlay\Controller\LoginController::class,   
+    "GET|/logout" => App\AutoPlay\Controller\LogoutController::class
 ];
