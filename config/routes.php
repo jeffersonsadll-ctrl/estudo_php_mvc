@@ -6,5 +6,7 @@ return [
     "POST|/editar-video" => App\AutoPlay\Controller\VideoFormController::class,
     "POST|/remover-video" => App\AutoPlay\Controller\VideoRemoverController::class,
     "POST|/inserir-video" => App\AutoPlay\Controller\VideoInserirController::class,
-    "POST|/atualizar-video" => App\AutoPlay\Controller\VideoAtualizarController::class
+    "POST|/atualizar-video" => App\AutoPlay\Controller\VideoAtualizarController::class,
+    "GET|/login" => App\AutoPlay\Controller\LoginFormController::class,
+    "POST|/login" => App\AutoPlay\Controller\LoginController::class    
 ];
