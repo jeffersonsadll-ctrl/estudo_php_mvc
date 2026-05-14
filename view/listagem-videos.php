@@ -4,10 +4,20 @@
     <ul class="videos__container" alt="videos">
         <?php foreach( $videos as $video ): ?>
         <li class="videos__item">
-            <iframe width="100%" height="72%" src="<?= $video->url ?>"
-                title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
+            <?php if( $video->getImgPath() !== null ): ?>
+
+                <a href="<?= $video->url ?>" target="_blank">
+                    <img class="thumbnail" src="img/upload/<?= $video->getImgPath() ?>" alt="Thumbnail do video" style="max-width: 420px;" />
+                </a>
+
+            <?php else: ?>
+
+                <iframe width="100%" height="72%" src="<?= $video->url ?>"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+
+            <?php endif; ?>
             <div class="descricao-video">
                 <img src="<?= '/img/logo.png' ?>" alt="logo canal">
                 <h3><?= $video->titulo ?></h3>

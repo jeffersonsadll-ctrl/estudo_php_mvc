@@ -31,10 +31,11 @@ class VideoRepository
    */
   public function add(Video $video): bool
   {
-    $sql = "INSERT INTO videos (url, titulo) VALUES(?, ?)";
+    $sql = "INSERT INTO videos (url, titulo, imgPath) VALUES (?, ?, ?)";
     $stmt = $this->pdo->prepare($sql);
     $stmt->bindValue(1, $video->url);
     $stmt->bindValue(2, $video->titulo);
+    $stmt->bindValue(3, $video->getImgPath()??null, PDO::PARAM_NULL);
 
     $rs = $stmt->execute();
 
@@ -64,10 +65,11 @@ class VideoRepository
    */
   public function update(Video $video): bool
   {
-    $sql = "UPDATE videos SET url = :url, titulo = :titulo WHERE id = :id";
+    $sql = "UPDATE videos SET url = :url, titulo = :titulo, imgPath = :imgPath WHERE id = :id";
     $stmt = $this->pdo->prepare($sql);
     $stmt->bindValue("url", $video->url);
     $stmt->bindValue("titulo", $video->titulo);
+    $stmt->bindValue("imgPath", $video->getImgPath());
     $stmt->bindValue("id", $video->id, PDO::PARAM_INT);
 
     return $stmt->execute();
@@ -79,12 +81,15 @@ class VideoRepository
    */
   public function all(): array
   {
-    $sql = "SELECT id, url, titulo FROM videos";
+    $sql = "SELECT id, url, titulo, imgPath FROM videos";
     $stmt = $this->pdo->query($sql);
 
     $listVideos = array_map(function($dataVideo){
       $video = new Video($dataVideo['url'], $dataVideo['titulo']);
       $video->setId($dataVideo['id']);
+      if( $dataVideo['imgPath'] !== null ) {
+        $video->setImgPath($dataVideo['imgPath']);
+      }
       return $video;
     }, $stmt->fetchAll(PDO::FETCH_ASSOC));
 
@@ -93,7 +98,7 @@ class VideoRepository
 
   public function findById(int $id): ?Video
   {
-    $sql = "SELECT id, url, titulo FROM videos WHERE id = :id";
+    $sql = "SELECT id, url, titulo, imgPath FROM videos WHERE id = :id";
     $stmt = $this->pdo->prepare($sql);
     $stmt->bindValue("id", $id, PDO::PARAM_INT);
     $stmt->execute();
@@ -106,6 +111,9 @@ class VideoRepository
 
     $video = new Video($dataVideo['url'], $dataVideo['titulo']);
     $video->setId($dataVideo['id']);
+    if( $dataVideo['imgPath'] !== null ) {
+      $video->setImgPath($dataVideo['imgPath']);
+    }
 
     return $video;
   }

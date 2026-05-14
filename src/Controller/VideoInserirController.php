@@ -25,8 +25,24 @@ class VideoInserirController implements Controller
         echo 'Preencha todos os campos obrigatorios.';
         exit;
       }
+
+      $video = new Video($url, $titulo);
       
-      $this->videoRepository->add(new Video($url, $titulo));
+      if( isset($_FILES['imgPath']) && $_FILES['imgPath']['error'] == UPLOAD_ERR_OK )
+      {
+        $imgPath_temp = $_FILES['imgPath']['tmp_name'];
+
+        move_uploaded_file(
+          $imgPath_temp,
+          __DIR__ . '/../../public/img/upload/' . $_FILES['imgPath']['name']
+        );
+
+        $imgPath = $_FILES['imgPath']['name'];
+
+        $video->setImgPath($imgPath);        
+      }
+
+      $this->videoRepository->add($video);
 
       header('Location: ./index.php');
       exit;

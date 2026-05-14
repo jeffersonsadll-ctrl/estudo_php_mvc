@@ -28,6 +28,40 @@ class VideoAtualizarController implements Controller
         }
 
         $video = new Video($url, $titulo);
+        $videoAtual = $this->videoRepository->findById($id);
+
+        if( isset($_POST['removerImg']) ){
+            // remover a img atual da pasta uploads
+            if( $videoAtual->getImgPath() !== null ){
+                $caminhoImgAtual = __DIR__ . '/../../public/img/upload/' . $videoAtual->getImgPath();
+                if( file_exists($caminhoImgAtual) ){
+                    unlink($caminhoImgAtual);
+                }
+            }
+            $video->setImgPath(null);
+        }
+        else if( isset($_FILES['imgPath']) && $_FILES['imgPath']['error'] === UPLOAD_ERR_OK ){
+            // remover a img atual da pasta uploads
+            if( $videoAtual->getImgPath() !== null ){
+                $caminhoImgAtual = __DIR__ . '/../../public/img/upload/' . $videoAtual->getImgPath();
+                if( file_exists($caminhoImgAtual) ){
+                    unlink($caminhoImgAtual);
+                }
+            }
+
+            // salvar a nova img na pasta uploads
+            $nomeArquivo = $_FILES['imgPath']['name'];
+            move_uploaded_file(
+                $_FILES['imgPath']['tmp_name'],
+                __DIR__.'/../../public/img/upload/' . $nomeArquivo
+            );
+            $video->setImgPath($nomeArquivo);
+        }
+        else {
+            // manter a img atual caso nenhuma nova img seja enviada
+            $video->setImgPath($videoAtual->getImgPath());
+        }
+
         $video->setId($id);
 
         $this->videoRepository->update($video);

@@ -7,6 +7,7 @@ class Video
 
   public readonly int $id;
   public readonly string $url;
+  public ?string $imgPath = null;  
 
   public function __construct(
     string $url,
@@ -48,5 +49,15 @@ class Video
     }
 
     $this->id = $id;
+  }
+
+  public function setImgPath(string|null $imgPath): void
+  {
+    $this->imgPath = $imgPath;
+  }
+
+  public function getImgPath(): ?string
+  {
+    return $this->imgPath;
   }
 }
