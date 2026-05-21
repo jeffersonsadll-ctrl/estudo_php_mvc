@@ -40,7 +40,7 @@ class VideoAtualizarController implements Controller
             }
             $video->setImgPath(null);
         }
-        else if( isset($_FILES['imgPath']) && $_FILES['imgPath']['error'] === UPLOAD_ERR_OK ){
+        else if( array_key_exists('imgPath', $_FILES) && $_FILES['imgPath']['error'] === UPLOAD_ERR_OK ){
             // remover a img atual da pasta uploads
             if( $videoAtual->getImgPath() !== null ){
                 $caminhoImgAtual = __DIR__ . '/../../public/img/upload/' . $videoAtual->getImgPath();
@@ -50,12 +50,17 @@ class VideoAtualizarController implements Controller
             }
 
             // salvar a nova img na pasta uploads
-            $nomeArquivo = $_FILES['imgPath']['name'];
-            move_uploaded_file(
-                $_FILES['imgPath']['tmp_name'],
-                __DIR__.'/../../public/img/upload/' . $nomeArquivo
-            );
-            $video->setImgPath($nomeArquivo);
+            $nomeArquivo = uniqid('ul_') . "_" . pathinfo($_FILES['imgPath']['name'], PATHINFO_BASENAME);
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->file($_FILES['imgPath']['tmp_name']);
+
+            if( str_starts_with($mimeType, 'image/') ){
+                move_uploaded_file(
+                    $_FILES['imgPath']['tmp_name'],
+                    __DIR__.'/../../public/img/upload/' . $nomeArquivo
+                );
+                $video->setImgPath($nomeArquivo);
+            }
         }
         else {
             // manter a img atual caso nenhuma nova img seja enviada

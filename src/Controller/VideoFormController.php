@@ -25,10 +25,7 @@ class VideoFormController implements Controller
     }
     else {
       $id = false;
-      $video = (object) [
-          'url' => '',
-          'titulo' => ''
-      ];
+      $video = null;
       $actionForm = '/inserir-video';
     }
     require __DIR__ . '/../../view/formulario-video.php';

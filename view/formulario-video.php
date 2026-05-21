@@ -14,7 +14,7 @@
                     <input name="titulo" class="campo__escrita" required id='titulo' value="<?= $video ? $video->titulo : '' ?>" />
                 </div>
 
-                <?php if( $video->getImgPath() !== null ): ?>
+                <?php if( $video !== null && $video->getImgPath() !== null ): ?>
                     <img class="formulario__img" src="/img/upload/<?= $video->getImgPath() ?>" style="max-width: 200px;" alt="Imagem do video <?= $video->titulo ?>">
                     <input type="checkbox" name="removerImg" id="removerImg" value="1">
                     <label for="removerImg" style="color: black;">Remover imagem atual</label>
@@ -26,7 +26,6 @@
                 </div>
 
                 <?php if ($id !== false): ?>
-                  <?= $video ? $video->id : '' ?>
                   <input type="hidden" name="id" value="<?= $video ? $video->id : '' ?>">
                 <?php endif; ?>
 

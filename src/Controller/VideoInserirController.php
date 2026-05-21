@@ -28,18 +28,23 @@ class VideoInserirController implements Controller
 
       $video = new Video($url, $titulo);
       
-      if( isset($_FILES['imgPath']) && $_FILES['imgPath']['error'] == UPLOAD_ERR_OK )
+      if( array_key_exists('imgPath', $_FILES) && $_FILES['imgPath']['error'] == UPLOAD_ERR_OK )
       {
-        $imgPath_temp = $_FILES['imgPath']['tmp_name'];
+        $baseNamePath = uniqid('ul_') . "_" . pathinfo($_FILES['imgPath']['tmp_name'], PATHINFO_BASENAME);
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($_FILES['imgPath']['tmp_name']);
 
-        move_uploaded_file(
-          $imgPath_temp,
-          __DIR__ . '/../../public/img/upload/' . $_FILES['imgPath']['name']
-        );
+        if( str_starts_with($mimeType, 'image/') ){
 
-        $imgPath = $_FILES['imgPath']['name'];
+          move_uploaded_file(
+            $_FILES['imgPath']['tmp_name'],
+            __DIR__ . '/../../public/img/upload/' . $baseNamePath
+          );
+  
+          $video->setImgPath($baseNamePath);        
 
-        $video->setImgPath($imgPath);        
+        }
+
       }
 
       $this->videoRepository->add($video);
